@@ -78,8 +78,8 @@ exports.retrieve = async (req, res, next) => {
     });
   }
   if (!user) {
-    return res.status(400).json({
-      message: "User does not exist",
+    return res.status(200).json({
+      message: "User not bound",
     });
   }
   return res.status(200).json({
