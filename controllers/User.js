@@ -83,7 +83,7 @@ exports.retrieve = async (req, res, next) => {
     });
   }
   return res.status(200).json({
-    address,
-    worldcoin_hash,
+    address: user.address,
+    worldcoin_hash: user.worldcoin_hash,
   });
 };
