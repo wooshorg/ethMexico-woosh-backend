@@ -10,6 +10,14 @@ require("dotenv").config();
  */
 
 /**
+ * Collection Cache Payload
+ * @typedef {object} EditPayload
+ * @property {string} address.required
+ * @property {string} username
+ * @property {string} image_url
+ */
+
+/**
  * Reward Redeemed Response
  * @typedef {object} DefaultSuccessResponse
  * @property {string} message.required - Message of the response
@@ -43,6 +51,44 @@ exports.bind = async (req, res, next) => {
     });
     res.status(200).json({
       message: `User binded ${address} to ${worldcoin_hash}`,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Server error",
+    });
+  }
+};
+
+/**
+ * put /user/edit/{address}
+ * @summary Edit user name and image
+ * @tags User
+ * @description Edit user name and image
+ * @param {EditPayload} request.body.required - Collection Cache Payload
+ * @return {DefaultSuccessResponse} 200 - Success response
+ * @return {DefaultErrorResponse} 400 - Bad request response
+ */
+exports.edit = async (req, res, next) => {
+  const { address, username, image_url } = req.body;
+
+  let payload = {};
+
+  if (username) {
+    payload.username = username;
+  }
+
+  if (image_url) {
+    payload.image_url = image_url;
+  }
+
+  try {
+    await User.findOneAndUpdate({
+      address,
+      payload,
+    });
+    res.status(200).json({
+      message: `User  ${address} updated`,
     });
   } catch (error) {
     console.error(error);
